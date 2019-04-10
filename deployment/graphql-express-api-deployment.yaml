@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: graphql-express-api
+spec:
+  selector:
+    app: all
+    type: api
+  ports:
+    - name: http
+      protocol: 'TCP'
+      port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graphql-express-api
+spec:
+  selector:
+    matchLabels:
+      app: all
+      type: api
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: all
+        type: api
+    spec:
+      containers:
+      - name: graphql-express-api
+# Set version here
+        image: kellenschmidt/graphql-express-api:latest
+        imagePullPolicy: Always
+        env:
+        - name: EXPRESS_PORT
+          value: "80"
+        - name: NODE_ENV
+          value: "production"
+        envFrom:
+        - secretRef:
+            name: mongo-login
+        - secretRef:
+            name: useragent-api
+        ports:
+        - containerPort: 80

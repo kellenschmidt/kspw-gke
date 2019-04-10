@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dqc-api
+spec:
+  selector:
+    app: data-quality-checker
+    type: api
+  ports:
+    - name: http
+      protocol: 'TCP'
+      port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dqc-api
+spec:
+  selector:
+    matchLabels:
+      app: data-quality-checker
+      type: api
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: data-quality-checker
+        type: api
+    spec:
+      containers:
+      - name: dqc-api
+# Set version here
+        image: kellenschmidt/dqc-api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80

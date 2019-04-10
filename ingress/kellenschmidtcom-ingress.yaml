@@ -1,0 +1,56 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kellenschmidtcom
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    certmanager.k8s.io/issuer: "letsencrypt-prod"
+    certmanager.k8s.io/acme-challenge-type: http01
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # kubernetes.io/ingress.global-static-ip-name: "kellenschmidtcom-ip"
+spec:
+  tls:
+  - hosts:
+    - kellenschmidt.com
+    - pma.kellenschmidt.com
+    secretName: kellenschmidtcom-certificate
+  backend:
+    serviceName: default-http-backend
+    servicePort: 80
+  rules:
+  - host: kellenschmidt.com
+    http:
+      paths:
+      - path: /?(.*)
+        backend:
+          serviceName: interactive-resume-and-url-shortener
+          servicePort: 80
+      - path: /api/v1/?(.*)
+        backend:
+          serviceName: slimphp-api
+          servicePort: 80
+      - path: /api/v2/?(.*)
+        backend:
+          serviceName: graphql-express-api
+          servicePort: 80
+      - path: /data-quality-checker/?(.*)
+        backend:
+          serviceName: data-quality-checker
+          servicePort: 80
+      - path: /data-quality-checker/api/?(.*)
+        backend:
+          serviceName: dqc-api
+          servicePort: 80
+      - path: /analytics/?(.*)
+        backend:
+          serviceName: analytics-for-links-and-sites
+          servicePort: 80
+  - host: pma.kellenschmidt.com
+    http:
+      paths:
+      - path: /?(.*)
+        backend:
+          serviceName: phpmyadmin
+          servicePort: 80
