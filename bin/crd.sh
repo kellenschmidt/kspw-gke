@@ -21,6 +21,7 @@ kubectl $1 -f deployment/analytics-for-links-and-sites-deployment.yaml
 
 # Create ingresses
 kubectl $1 -f ingress/kellenschmidtcom-ingress.yaml
+# kubectl $1 -f ingress/kellenforthewin-ingress.yaml
 
 # Create the issuer
 kubectl $1 -f issuer/general-issuer.yaml

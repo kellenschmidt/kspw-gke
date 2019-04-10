@@ -4,13 +4,10 @@
 
 echo "preparing..."
 export GCLOUD_PROJECT=$(gcloud config get-value project)
-# export INSTANCE_REGION=us-west1
-# export INSTANCE_REGION=us-central1
 export INSTANCE_REGION=us-east1
 export INSTANCE_ZONE=${INSTANCE_REGION}-b
 export PROJECT_NAME=kellen6
 export MACHINE_TYPE=g1-small
-# export MACHINE_TYPE=f1-micro # f1-micro requires at least 3 nodes
 export CLUSTER_NAME=${PROJECT_NAME}-cluster
 export CONTAINER_NAME=${PROJECT_NAME}-container
 export NUM_NODES=3
@@ -33,7 +30,8 @@ gcloud container clusters create ${CLUSTER_NAME} \
     --enable-autoupgrade \
     --enable-ip-alias \
     --num-nodes ${NUM_NODES} \
-    --cluster-version ${CLUSTER_VERSION}
+    --cluster-version ${CLUSTER_VERSION} \
+    --create-subnetwork name=${PROJECT_NAME}-subnet,range=/20
 
 echo "confirm cluster is running"
 gcloud container clusters list

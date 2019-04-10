@@ -9,7 +9,6 @@ metadata:
     certmanager.k8s.io/issuer: "letsencrypt-prod"
     certmanager.k8s.io/acme-challenge-type: http01
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    # kubernetes.io/ingress.global-static-ip-name: "kellenschmidtcom-ip"
 spec:
   tls:
   - hosts:
